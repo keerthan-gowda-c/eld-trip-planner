@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import '../index.css'
 
 const ROW_LABELS = ['1. Off Duty', '2. Sleeper\nBerth', '3. Driving', '4. On Duty\n(not driving)']
 const HOURS = Array.from({ length: 25 }, (_, i) => i)
@@ -217,202 +218,243 @@ export default function ELDLogSheet({ log }) {
   const { off_duty, sleeper, driving, on_duty } = log.total_hours
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', fontSize: 11, color: '#111', border: '2px solid #333', padding: 0, background: '#fff', maxWidth: 960, margin: '0 auto' }}>
+  <div className="card shadow-sm border-dark mx-auto" style={{ maxWidth: 960 }}>
+    {/* Header */}
+    <div className="card-header bg-white border-2 border-bottom">
+      <div className="d-flex justify-content-between align-items-start flex-wrap">
 
-      {/* Title bar */}
-      <div style={{ borderBottom: '2px solid #333', padding: '6px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: 16, fontWeight: 'bold', letterSpacing: 0.5 }}>Drivers Daily Log</div>
-          <div style={{ fontSize: 9, color: '#555' }}>(24 hours)</div>
+          <h5 className="fw-bold mb-0">Driver's Daily Log</h5>
+          <small className="text-muted">(24 Hours)</small>
         </div>
-        <div style={{ display: 'flex', gap: 24, fontSize: 11, alignItems: 'flex-end' }}>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ borderBottom: '1px solid #333', minWidth: 40, textAlign: 'center', paddingBottom: 1 }}>{month}</div>
-              <div style={{ fontSize: 9 }}>(month)</div>
+
+        <div className="d-flex gap-4 align-items-end">
+
+          <div className="d-flex gap-2">
+            <div className="text-center">
+              <div className="border-bottom px-3">{month}</div>
+              <small>(month)</small>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ borderBottom: '1px solid #333', minWidth: 30, textAlign: 'center', paddingBottom: 1 }}>{day}</div>
-              <div style={{ fontSize: 9 }}>(day)</div>
+
+            <div className="text-center">
+              <div className="border-bottom px-3">{day}</div>
+              <small>(day)</small>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ borderBottom: '1px solid #333', minWidth: 50, textAlign: 'center', paddingBottom: 1 }}>{year}</div>
-              <div style={{ fontSize: 9 }}>(year)</div>
+
+            <div className="text-center">
+              <div className="border-bottom px-3">{year}</div>
+              <small>(year)</small>
             </div>
           </div>
-          <div style={{ fontSize: 9, lineHeight: 1.6, textAlign: 'right', color: '#444' }}>
+
+          <small className="text-muted text-end">
             <div>Original - File at home terminal.</div>
-            <div>Duplicate - Driver retains in his/her possession for 8 days.</div>
-          </div>
+            <div>Duplicate - Driver retains for 8 days.</div>
+          </small>
+
         </div>
-      </div>
 
-      {/* From / To */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #bbb', padding: '4px 10px', gap: 40 }}>
-        <div><span style={{ fontWeight: 'bold' }}>From:</span> <span style={{ borderBottom: '1px solid #333', display: 'inline-block', minWidth: 160 }}>{log.from || log.pickup_location || ''}</span></div>
-        <div><span style={{ fontWeight: 'bold' }}>To:</span> <span style={{ borderBottom: '1px solid #333', display: 'inline-block', minWidth: 160 }}>{log.to ||  log.dropoff_location || ''}</span></div>
-      </div>
-
-      {/* Miles & Carrier info */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #bbb', padding: '6px 10px', gap: 16 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
-            <div style={{ border: '1px solid #888', padding: '4px 8px', minWidth: 80 }}>
-              <div style={{ fontSize: 9, color: '#555' }}>Total Miles Driving</div>
-              <div style={{ fontSize: 12, fontWeight: 'bold', minHeight: 16 }}>{log.miles_driving || ''}</div>
-            </div>
-            <div style={{ border: '1px solid #888', padding: '4px 8px', minWidth: 80 }}>
-              <div style={{ fontSize: 9, color: '#555' }}>Total Miles Today</div>
-              <div style={{ fontSize: 12, fontWeight: 'bold', minHeight: 16 }}>{log.miles_total || ''}</div>
-            </div>
-          </div>
-          <div style={{ border: '1px solid #888', padding: '4px 8px' }}>
-            <div style={{ fontSize: 9, color: '#555' }}>Truck/Tractor and Trailer Numbers or License Plate(s)/State (show each unit)</div>
-            <div style={{ minHeight: 14 }}>{log.vehicle_numbers || ''}</div>
-          </div>
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ borderBottom: '1px solid #bbb', padding: '3px 0', marginBottom: 4 }}>
-            <div style={{ fontSize: 9, color: '#555' }}>Name of Carrier or Carriers</div>
-            <div style={{ minHeight: 14 }}>{log.carrier || ''}</div>
-          </div>
-          <div style={{ borderBottom: '1px solid #bbb', padding: '3px 0', marginBottom: 4 }}>
-            <div style={{ fontSize: 9, color: '#555' }}>Main Office Address</div>
-            <div style={{ minHeight: 14 }}>{log.main_office || ''}</div>
-          </div>
-          <div style={{ padding: '3px 0' }}>
-            <div style={{ fontSize: 9, color: '#555' }}>Home Terminal Address</div>
-            <div style={{ minHeight: 14 }}>{log.home_terminal || ''}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Driver name & co-driver */}
-      <div style={{ display: 'flex', padding: '4px 10px', borderBottom: '1px solid #bbb', gap: 40, fontSize: 10 }}>
-        <div>
-          <span style={{ fontWeight: 'bold' }}>Driver: </span>
-          <span style={{ borderBottom: '1px solid #333', display: 'inline-block', minWidth: 180 }}>{log.driver_name}</span>
-        </div>
-        <div>
-          <span style={{ fontWeight: 'bold' }}>Co-Driver: </span>
-          <span style={{ borderBottom: '1px solid #333', display: 'inline-block', minWidth: 160 }}>{log.co_driver || ''}</span>
-        </div>
-      </div>
-
-      {/* Grid canvas */}
-      <div style={{ padding: '0 10px 4px' }}>
-        <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} />
-      </div>
-
-      {/* Remarks */}
-      <div style={{ borderTop: '1px solid #bbb', padding: '6px 10px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: 12, marginBottom: 4 }}>Remarks</div>
-        <div style={{ borderBottom: '1px solid #aaa', minHeight: 18, fontSize: 11 }}>{log.remarks || ''}</div>
-        <div style={{ borderBottom: '1px solid #aaa', minHeight: 18 }}></div>
-      </div>
-
-      {/* Shipping Documents */}
-      <div style={{ borderTop: '1px solid #bbb', padding: '6px 10px' }}>
-        <div style={{ fontWeight: 'bold', fontSize: 11, marginBottom: 2 }}>Shipping Documents:</div>
-        <div style={{ borderBottom: '1px solid #aaa', minHeight: 16 }}>{log.shipping_docs || ''}</div>
-      </div>
-
-      {/* DVL / Shipper */}
-      <div style={{ borderTop: '1px solid #bbb', padding: '4px 10px', display: 'flex', gap: 24, fontSize: 10 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 'bold' }}>DVL or Manifest No.</div>
-          <div style={{ fontWeight: 'bold', color: '#666' }}>or</div>
-          <div style={{ borderBottom: '1px solid #aaa', minHeight: 14 }}></div>
-        </div>
-        <div style={{ flex: 2 }}>
-          <div style={{ fontWeight: 'bold' }}>Shipper &amp; Commodity</div>
-          <div style={{ borderBottom: '1px solid #aaa', minHeight: 14 }}></div>
-        </div>
-      </div>
-
-      {/* Instructions */}
-      <div style={{ borderTop: '1px solid #bbb', padding: '4px 10px', fontSize: 9, textAlign: 'center', color: '#555' }}>
-        <div>Enter name of place you reported and where released from work and when and where each change of duty occurred.</div>
-        <div>Use time standard of home terminal.</div>
-      </div>
-
-      {/* Recap section */}
-      <div style={{ borderTop: '2px solid #333', padding: '6px 10px', fontSize: 9 }}>
-        <div style={{ display: 'flex', gap: 0 }}>
-          {/* Left: Recap label */}
-          <div style={{ width: 90, borderRight: '1px solid #888', paddingRight: 6 }}>
-            <div style={{ fontWeight: 'bold', fontSize: 10 }}>Recap:</div>
-            <div>Complete at</div>
-            <div>end of day</div>
-          </div>
-
-          {/* 70 hour */}
-          <div style={{ flex: 1, borderRight: '1px solid #888', padding: '0 6px' }}>
-            <div style={{ fontWeight: 'bold', textAlign: 'center' }}>70 Hour/ 8 Day</div>
-            <div style={{ display: 'flex', gap: 4, marginTop: 2 }}>
-              <div style={{ flex: 1, textAlign: 'center' }}>
-                <div style={{ fontWeight: 'bold' }}>Drivers</div>
-              </div>
-              {['A.', 'B.', 'C.'].map(l => (
-                <div key={l} style={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{l}</div>
-              ))}
-            </div>
-            <div style={{ display: 'flex', gap: 4, marginTop: 2, fontSize: 8 }}>
-              <div style={{ flex: 1 }}>
-                <div>On duty hours today. Total lines 3 &amp; 4</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>A. Total hours on duty last 7 days including today.</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>B. Total hours available tomorrow 70 hr. minus A*</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>C. Total hours on duty last 8 days including today.</div>
-              </div>
-            </div>
-          </div>
-
-          {/* 60 hour */}
-          <div style={{ flex: 1, padding: '0 6px' }}>
-            <div style={{ fontWeight: 'bold', textAlign: 'center' }}>60 Hour/ 7 Day</div>
-            <div style={{ display: 'flex', gap: 4, marginTop: 2 }}>
-              <div style={{ flex: 1, textAlign: 'center' }}>
-                <div style={{ fontWeight: 'bold' }}>Day Drivers</div>
-              </div>
-              {['A.', 'B.', 'C.'].map(l => (
-                <div key={l} style={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>{l}</div>
-              ))}
-            </div>
-            <div style={{ display: 'flex', gap: 4, marginTop: 2, fontSize: 8 }}>
-              <div style={{ flex: 1 }}>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>A. Total hours on duty last 8 days including today.</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>B. Total hours available tomorrow 60 hr. minus A*</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div>C. Total hours on duty last 7 days including today.</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right note */}
-          <div style={{ width: 100, borderLeft: '1px solid #888', paddingLeft: 6, fontSize: 8 }}>
-            <div style={{ fontWeight: 'bold' }}>*If you took 34 consecutive hours off duty you have 60/70 hours available</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Totals summary bar */}
-      <div style={{ borderTop: '2px solid #333', padding: '4px 10px', display: 'flex', gap: 24, fontSize: 10, background: '#f5f5f5' }}>
-        <div><span style={{ fontWeight: 'bold' }}>Off Duty:</span> {off_duty}h</div>
-        <div><span style={{ fontWeight: 'bold' }}>Sleeper Berth:</span> {sleeper}h</div>
-        <div><span style={{ fontWeight: 'bold' }}>Driving:</span> {driving}h</div>
-        <div><span style={{ fontWeight: 'bold' }}>On Duty (Not Driving):</span> {on_duty}h</div>
       </div>
     </div>
-  )
+
+    {/* From / To */}
+    <div className="card-body py-2 border-bottom">
+      <div className="row">
+        <div className="col-md-6">
+          <strong>From:</strong>{" "}
+          {log.from || log.pickup_location}
+        </div>
+
+        <div className="col-md-6">
+          <strong>To:</strong>{" "}
+          {log.to || log.dropoff_location}
+        </div>
+      </div>
+    </div>
+
+    {/* Summary */}
+    <div className="card-body border-bottom">
+
+      <div className="row g-3">
+
+        <div className="col-md-6">
+
+          <div className="row g-2 mb-2">
+
+            <div className="col-6">
+              <div className="card text-center">
+                <div className="card-body p-2">
+                  <small className="text-muted">
+                    Total Miles Driving
+                  </small>
+                  <div className="fw-bold">
+                    {log.miles_driving}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-6">
+              <div className="card text-center">
+                <div className="card-body p-2">
+                  <small className="text-muted">
+                    Total Miles Today
+                  </small>
+                  <div className="fw-bold">
+                    {log.miles_total}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="border rounded p-2">
+            <small className="text-muted">
+              Vehicle Numbers
+            </small>
+            <div>{log.vehicle_numbers}</div>
+          </div>
+
+        </div>
+
+        <div className="col-md-6">
+
+          <div className="mb-2">
+            <small className="text-muted">
+              Carrier
+            </small>
+            <div>{log.carrier}</div>
+          </div>
+
+          <div className="mb-2">
+            <small className="text-muted">
+              Main Office
+            </small>
+            <div>{log.main_office}</div>
+          </div>
+
+          <div>
+            <small className="text-muted">
+              Home Terminal
+            </small>
+            <div>{log.home_terminal}</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    {/* Driver */}
+    <div className="card-body py-2 border-bottom">
+      <div className="row">
+        <div className="col-md-6">
+          <strong>Driver:</strong> {log.driver_name}
+        </div>
+
+        <div className="col-md-6">
+          <strong>Co-Driver:</strong> {log.co_driver}
+        </div>
+      </div>
+    </div>
+
+    {/* Canvas */}
+    <div className="card-body py-2">
+      <canvas
+        ref={canvasRef}
+        className="w-100"
+      />
+    </div>
+
+    {/* Remarks */}
+<div className="card-body eld-section">
+  <h6 className="fw-bold">Remarks</h6>
+
+  <div className="form-control p-3 remarks-box">
+    {log.remarks}
+  </div>
+</div>
+
+{/* Shipping */}
+<div className="card-body eld-section">
+  <h6 className="fw-bold">
+    Shipping Documents
+  </h6>
+
+  <div className="form-control p-3 shipping-box">
+    {log.shipping_docs}
+  </div>
+</div>
+
+{/* DVL */}
+<div className="card-body eld-section">
+  <div className="row g-3">
+
+    <div className="col-md-4">
+      <label className="form-label fw-bold">
+        DVL / Manifest No.
+      </label>
+
+      <div className="form-control p-3 log-box"></div>
+    </div>
+
+    <div className="col-md-8">
+      <label className="form-label fw-bold">
+        Shipper & Commodity
+      </label>
+
+      <div className="form-control p-3 log-box"></div>
+    </div>
+
+  </div>
+</div>
+
+    {/* Totals */}
+    <div className="card-footer bg-light">
+
+      <div className="row text-center">
+
+        <div className="col">
+          <div className="text-muted small">
+            Off Duty
+          </div>
+          <span className="badge bg-secondary">
+            {off_duty}h
+          </span>
+        </div>
+
+        <div className="col">
+          <div className="text-muted small">
+            Sleeper
+          </div>
+          <span className="badge bg-info">
+            {sleeper}h
+          </span>
+        </div>
+
+        <div className="col">
+          <div className="text-muted small">
+            Driving
+          </div>
+          <span className="badge bg-success">
+            {driving}h
+          </span>
+        </div>
+
+        <div className="col">
+          <div className="text-muted small">
+            On Duty
+          </div>
+          <span className="badge bg-warning text-dark">
+            {on_duty}h
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+)
 }

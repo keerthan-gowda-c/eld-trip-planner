@@ -68,22 +68,15 @@ def generate_daily_logs(events: list[TripEvent], driver_name: str = 'Driver') ->
     cumulative_miles = 0
     for day_key in sorted(day_segments.keys()):
         segments = sorted(day_segments[day_key], key=lambda s: s['start_minute'])
+
         remarks = []
         for seg in segments:
             if seg['notes']:
                 remarks.append(f"{seg['notes']} @ {seg['location']}")
 
-        # Calculate daily mileage from driving hours
-        driving_hours = _sum_status_hours(
-            segments,
-            DutyStatus.DRIVING.value
-        )
-
-        today_miles = round(driving_hours * 50)  # 50 = average mph
-        cumulative_miles += today_miles
-
         today_miles = round(day_miles.get(day_key, 0))
         cumulative_miles += today_miles
+
         logs.append({
             'date': day_key,
             'driver_name': driver_name,
@@ -98,7 +91,6 @@ def generate_daily_logs(events: list[TripEvent], driver_name: str = 'Driver') ->
                 'driving': _sum_status_hours(segments, DutyStatus.DRIVING.value),
                 'on_duty': _sum_status_hours(segments, DutyStatus.ON_DUTY.value),
             },
-            
         })
 
     return logs
