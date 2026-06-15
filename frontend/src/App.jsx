@@ -27,6 +27,11 @@ export default function App() {
 
     try {
       const data = await planTrip(form)
+
+      if (!data || !data.daily_logs) {
+      throw new Error("Invalid response from backend (missing daily_logs)");
+    }
+    
       // Add pickup and dropoff locations to every ELD log
       const updatedData = {
         ...data,
