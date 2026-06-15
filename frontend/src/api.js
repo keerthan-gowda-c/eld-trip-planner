@@ -10,15 +10,6 @@ export async function planTrip(tripData) {
   const text = await response.text();
 
   let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    console.error("Backend returned invalid JSON:", text);
-    throw new Error("Server error: Invalid response from backend");
-  }
-  
-  if (!response.ok) {
-    throw new Error(data.error || 'Failed to plan trip')
-  }
+  console.log("RAW RESPONSE:", text);
   return data
 }
